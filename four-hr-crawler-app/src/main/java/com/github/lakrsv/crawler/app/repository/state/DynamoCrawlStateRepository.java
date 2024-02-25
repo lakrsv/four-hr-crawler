@@ -19,6 +19,7 @@ public class DynamoCrawlStateRepository implements CrawlStateRepository {
     public boolean tryStartCrawl(CrawlRequestContext context){
         var currentState = dynamoDbTemplate.load(Key.builder().partitionValue(context.crawlId()).build(), CrawlState.class);
         // TODO: Allow resuming requests that have errored out
+        // TODO: Why doesn't save throw (USE KEY CONSTRAINT INSTEAD)
         if(currentState != null) {
             return false;
         }
