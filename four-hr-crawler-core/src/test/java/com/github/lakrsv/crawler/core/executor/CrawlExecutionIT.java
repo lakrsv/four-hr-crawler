@@ -2,6 +2,7 @@ package com.github.lakrsv.crawler.core.executor;
 
 import com.github.lakrsv.crawler.core.dto.CrawlRequest;
 import com.github.lakrsv.crawler.core.dto.CrawlRequestConfiguration;
+import com.github.lakrsv.crawler.core.dto.CrawlRequestContext;
 import com.github.lakrsv.crawler.core.result.ResultHandler;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
 import org.awaitility.Awaitility;
@@ -26,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CrawlExecutorIT {
+public class CrawlExecutionIT {
     @Mock
     private CrawlScraper crawlScraper;
     @Mock
@@ -37,10 +38,11 @@ public class CrawlExecutorIT {
 
     @Test
     public void executeInvokesResultHandlerInCorrectOrder() {
-        var request = new CrawlRequest(URI.create("http://www.rapid7.com"), CrawlRequestConfiguration.builder()
-                .allowedDomains(Set.of("rapid7.com"))
+        var request = new CrawlRequest(URI.create("http://www.rapid7.com"));
+        var context = new CrawlRequestContext("crawlId", request, CrawlRequestConfiguration.builder()
+                .allowedDomains(Set.of(request.target().getHost()))
                 .build());
-        var crawlExecutor = new CrawlExecutor(request, crawlScraper, resultHandler, Executors.newVirtualThreadPerTaskExecutor());
+        var crawlExecutor = CrawlExecution.create(context, resultHandler, crawlScraper, Executors.newVirtualThreadPerTaskExecutor());
         when(crawlScraper.scrape(any())).thenReturn(document);
         when(document.select(any(String.class))).thenReturn(new Elements());
 
@@ -48,20 +50,21 @@ public class CrawlExecutorIT {
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any()));
+                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any(), any()));
 
         var inOrder = Mockito.inOrder(resultHandler);
-        inOrder.verify(resultHandler).onCrawlStarted(any());
+        inOrder.verify(resultHandler).onCrawlStarting(any());
         inOrder.verify(resultHandler).onCrawlProgress(any(), any(), any());
-        inOrder.verify(resultHandler).onCrawlFinished(any());
+        inOrder.verify(resultHandler).onCrawlFinished(any(), any());
     }
 
     @Test
     public void executeVisitsAllEnqueuedUrls() {
-        var request = new CrawlRequest(URI.create("http://www.rapid7.com"), CrawlRequestConfiguration.builder()
-                .allowedDomains(Set.of("rapid7.com"))
+        var request = new CrawlRequest(URI.create("http://www.rapid7.com"));
+        var context = new CrawlRequestContext("crawlId", request, CrawlRequestConfiguration.builder()
+                .allowedDomains(Set.of(request.target().getHost()))
                 .build());
-        var crawlExecutor = new CrawlExecutor(request, crawlScraper, resultHandler, Executors.newVirtualThreadPerTaskExecutor());
+        var crawlExecutor = CrawlExecution.create(context, resultHandler, crawlScraper, Executors.newVirtualThreadPerTaskExecutor());
         when(crawlScraper.scrape(any())).thenReturn(document);
 
         var firstBatch = createMockLinkBatch(10, "http://www.rapid7.com/");
@@ -74,17 +77,18 @@ public class CrawlExecutorIT {
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))
-                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any()));
+                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any(), any()));
 
         verify(resultHandler, times(26)).onCrawlProgress(any(), any(), any());
     }
 
     @Test
     public void executeVisitsAllEnqueuedUrlsButNotIncludingInvalidOnes() {
-        var request = new CrawlRequest(URI.create("http://www.rapid7.com"), CrawlRequestConfiguration.builder()
-                .allowedDomains(Set.of("rapid7.com"))
+        var request = new CrawlRequest(URI.create("http://www.rapid7.com"));
+        var context = new CrawlRequestContext("crawlId", request, CrawlRequestConfiguration.builder()
+                .allowedDomains(Set.of(request.target().getHost()))
                 .build());
-        var crawlExecutor = new CrawlExecutor(request, crawlScraper, resultHandler, Executors.newVirtualThreadPerTaskExecutor());
+        var crawlExecutor = CrawlExecution.create(context, resultHandler, crawlScraper, Executors.newVirtualThreadPerTaskExecutor());
         when(crawlScraper.scrape(any())).thenReturn(document);
 
         var firstBatch = createMockLinkBatch(10, "http://www.rapid7.com/");
@@ -97,7 +101,7 @@ public class CrawlExecutorIT {
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))
-                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any()));
+                .untilAsserted(() -> verify(resultHandler).onCrawlFinished(any(), any()));
 
         verify(resultHandler, times(21)).onCrawlProgress(any(), any(), any());
     }

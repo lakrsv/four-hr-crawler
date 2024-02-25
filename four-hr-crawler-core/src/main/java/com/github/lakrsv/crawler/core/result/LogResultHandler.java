@@ -1,6 +1,6 @@
 package com.github.lakrsv.crawler.core.result;
 
-import com.github.lakrsv.crawler.core.dto.CrawlRequest;
+import com.github.lakrsv.crawler.core.dto.CrawlRequestContext;
 import com.github.lakrsv.crawler.core.exception.CrawlException;
 import org.jsoup.nodes.Document;
 
@@ -12,24 +12,24 @@ public class LogResultHandler implements ResultHandler {
     private static final Logger LOGGER = Logger.getLogger(LogResultHandler.class.getName());
 
     @Override
-    public void onCrawlStarted(CrawlRequest crawlRequest) {
+    public void onCrawlStarting(CrawlRequestContext context) {
         LOGGER.log(Level.INFO, "onCrawlStarted()");
     }
 
     @Override
-    public void onCrawlProgress(CrawlRequest crawlRequest, URI target, Document document) {
+    public void onCrawlProgress(CrawlRequestContext context, URI target, Document document) {
         LOGGER.log(Level.INFO, "onCrawlProgress() target: " + target); // + " document: " + document.toString()
 
     }
 
     @Override
-    public void onCrawlFinished(CrawlRequest crawlRequest) {
+    public void onCrawlFinished(CrawlRequestContext context, CrawlException e) {
         LOGGER.log(Level.INFO, "onCrawlFinished()");
 
     }
 
     @Override
-    public void onCrawlError(CrawlRequest crawlRequest, URI target, CrawlException e) {
+    public void onCrawlError(CrawlRequestContext context, URI target, CrawlException e) {
         LOGGER.log(Level.INFO, "onCrawlError() target: " + target + " e: " + e);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.lakrsv.crawler.app.configuration;
 
-import com.github.lakrsv.crawler.app.dynamo.LoggingResultHandler;
+import com.github.lakrsv.crawler.app.result.LoggingResultHandler;
 import com.github.lakrsv.crawler.core.FourHrCrawler;
 import com.github.lakrsv.crawler.core.result.ResultHandler;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
@@ -20,11 +20,6 @@ public class CrawlerConfiguration {
     @Bean
     public CrawlScraper crawlScraper() {
         return new CrawlScraper();
-    }
-
-    @Bean
-    public ResultHandler loggingResultHandler() {
-        return new LoggingResultHandler();
     }
 
     @Bean

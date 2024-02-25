@@ -1,10 +1,11 @@
 package com.github.lakrsv.crawler.core.executor;
 
-import com.github.lakrsv.crawler.core.dto.CrawlRequest;
+import com.github.lakrsv.crawler.core.dto.CrawlRequestContext;
 import com.github.lakrsv.crawler.core.exception.CrawlException;
 import com.github.lakrsv.crawler.core.filter.UriFilter;
 import com.github.lakrsv.crawler.core.result.ResultHandler;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 
@@ -16,11 +17,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-public class CrawlExecutor {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class CrawlExecution {
     private static final long PROGRESS_POLL_INTERVAL = 1000L;
 
-    private final CrawlRequest crawlRequest;
+    private final CrawlRequestContext requestContext;
     private final ResultHandler resultHandler;
     private final CrawlScraper crawlScraper;
     private final ExecutorService executorService;
@@ -30,16 +31,20 @@ public class CrawlExecutor {
 
     private UriFilter uriFilter;
 
+    public static CrawlExecution create(CrawlRequestContext context, ResultHandler resultHandler, CrawlScraper scraper, ExecutorService executorService) {
+        return new CrawlExecution(context, resultHandler, scraper, executorService);
+    }
+
     public void execute() {
-        uriFilter = crawlRequest.configuration().getUrlFilter();
+        uriFilter = requestContext.configuration().getUrlFilter();
 
         executorService.submit(() -> {
-            resultHandler.onCrawlStarted(crawlRequest);
+            resultHandler.onCrawlStarting(requestContext);
 
-            enqueueCrawl(crawlRequest.target());
+            enqueueCrawl(requestContext.request().target());
             waitForCompletion();
 
-            resultHandler.onCrawlFinished(crawlRequest);
+            resultHandler.onCrawlFinished(requestContext, null);
         });
     }
 
@@ -48,7 +53,7 @@ public class CrawlExecutor {
             try {
                 Thread.sleep(PROGRESS_POLL_INTERVAL);
             } catch (InterruptedException e) {
-                resultHandler.onCrawlError(crawlRequest, crawlRequest.target(), new CrawlException("Interrupted", e));
+                resultHandler.onCrawlError(requestContext, requestContext.request().target(), new CrawlException("Interrupted", e));
                 Thread.currentThread().interrupt();
             }
         } while (!runningFutures.isEmpty());
@@ -67,7 +72,7 @@ public class CrawlExecutor {
         visited.add(target);
 
         var scrapeResult = crawlScraper.scrape(target);
-        resultHandler.onCrawlProgress(crawlRequest, target, scrapeResult);
+        resultHandler.onCrawlProgress(requestContext, target, scrapeResult);
 
         extractLinks(scrapeResult)
                 .stream()

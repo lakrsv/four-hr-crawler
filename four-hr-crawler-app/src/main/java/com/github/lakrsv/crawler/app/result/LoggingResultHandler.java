@@ -1,6 +1,6 @@
-package com.github.lakrsv.crawler.app.dynamo;
+package com.github.lakrsv.crawler.app.result;
 
-import com.github.lakrsv.crawler.core.dto.CrawlRequest;
+import com.github.lakrsv.crawler.core.dto.CrawlRequestContext;
 import com.github.lakrsv.crawler.core.exception.CrawlException;
 import com.github.lakrsv.crawler.core.result.ResultHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +14,15 @@ import java.util.stream.Collectors;
 public class LoggingResultHandler implements ResultHandler {
 
     private final AtomicInteger counter = new AtomicInteger(0);
+
     @Override
-    public void onCrawlStarted(CrawlRequest crawlRequest) {
-        log.info("Crawl started with target {}", crawlRequest.target());
+    public void onCrawlStarting(CrawlRequestContext context) {
+        log.info("Crawl started with target {}", context.request().target());
         counter.set(0);
     }
 
     @Override
-    public void onCrawlProgress(CrawlRequest crawlRequest, URI target, Document document) {
+    public void onCrawlProgress(CrawlRequestContext context, URI target, Document document) {
         var links = document.select("a[href]").stream()
                 .map(link -> link.attr("abs:href"))
                 .distinct()
@@ -30,13 +31,13 @@ public class LoggingResultHandler implements ResultHandler {
     }
 
     @Override
-    public void onCrawlFinished(CrawlRequest crawlRequest) {
+    public void onCrawlFinished(CrawlRequestContext context, CrawlException e) {
         log.info("Crawl finished!");
         counter.set(0);
     }
 
     @Override
-    public void onCrawlError(CrawlRequest crawlRequest, URI target, CrawlException e) {
+    public void onCrawlError(CrawlRequestContext context, URI target, CrawlException e) {
         log.error("Got error during crawl", e);
     }
 }
