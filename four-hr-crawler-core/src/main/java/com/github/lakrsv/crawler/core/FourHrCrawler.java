@@ -14,6 +14,6 @@ public class FourHrCrawler {
     private final CrawlScraper crawlScraper;
 
     public void startCrawl(CrawlRequest request, ResultHandler resultHandler) {
-        new CrawlExecutor(request, crawlScraper, resultHandler, executorService).execute();
+        new CrawlExecutor(request, resultHandler, crawlScraper, executorService).execute();
     }
 }

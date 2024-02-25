@@ -21,9 +21,10 @@ public class CrawlExecutor {
     private static final long PROGRESS_POLL_INTERVAL = 1000L;
 
     private final CrawlRequest crawlRequest;
-    private final CrawlScraper crawlScraper;
     private final ResultHandler resultHandler;
+    private final CrawlScraper crawlScraper;
     private final ExecutorService executorService;
+    // TODO: Does it make sense to track running futures with an atomic integer instead?
     private final Set<Future<?>> runningFutures = ConcurrentHashMap.newKeySet();
     private final Set<URI> visited = ConcurrentHashMap.newKeySet();
 

@@ -14,6 +14,7 @@ public class CrawlScraper {
         }
         Document document;
         try {
+            // TODO: Don't use this -- Creates connection per request
             document = Jsoup.connect(uri.toString()).get();
         } catch (IOException e) {
             throw new CrawlException("Failed scraping page", e);

@@ -9,6 +9,7 @@ import java.net.URI;
 public interface ResultHandler {
     void onCrawlStarted(CrawlRequest crawlRequest);
 
+    // TODO: Fix leaky abstraction
     void onCrawlProgress(CrawlRequest crawlRequest, URI target, Document document);
 
     void onCrawlFinished(CrawlRequest crawlRequest);
