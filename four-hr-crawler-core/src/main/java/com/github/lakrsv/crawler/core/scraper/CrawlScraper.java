@@ -11,6 +11,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CrawlScraper {
     private final HttpBodyRetriever httpBodyRetriever;
+
     public Document scrape(URI uri) {
         if (uri == null) {
             throw new CrawlException("uri can not be null");

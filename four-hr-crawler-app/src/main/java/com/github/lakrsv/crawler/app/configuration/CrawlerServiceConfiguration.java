@@ -18,7 +18,7 @@ public class CrawlerServiceConfiguration {
     }
 
     @Bean
-    public ResultHandler resultHandler(){
+    public ResultHandler resultHandler() {
         return new LoggingResultHandler();
     }
 

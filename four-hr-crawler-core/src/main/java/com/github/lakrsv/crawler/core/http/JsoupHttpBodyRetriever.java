@@ -5,7 +5,7 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 
-public class JsoupHttpBodyRetriever implements HttpBodyRetriever{
+public class JsoupHttpBodyRetriever implements HttpBodyRetriever {
     @Override
     public String retrieveBody(String url) {
         try {

@@ -13,10 +13,8 @@ import com.github.lakrsv.crawler.core.result.ResultHandler;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -40,10 +38,11 @@ public class CrawlerService {
         return new SubmitCrawlResponse(requestContext.crawlId());
     }
 
-    public GetCrawlStatusResponse getCrawlStatus(String crawlId){
+    public GetCrawlStatusResponse getCrawlStatus(String crawlId) {
         return new GetCrawlStatusResponse(crawlStateRepository.getCrawlStatus(crawlId).orElse(null));
     }
-    public void getCrawlResult(String crawlId){
+
+    public void getCrawlResult(String crawlId) {
 
     }
 

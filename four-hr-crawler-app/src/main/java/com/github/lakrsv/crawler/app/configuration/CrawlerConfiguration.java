@@ -1,9 +1,7 @@
 package com.github.lakrsv.crawler.app.configuration;
 
-import com.github.lakrsv.crawler.app.result.LoggingResultHandler;
 import com.github.lakrsv.crawler.core.FourHrCrawler;
 import com.github.lakrsv.crawler.core.http.JsoupHttpBodyRetriever;
-import com.github.lakrsv.crawler.core.result.ResultHandler;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

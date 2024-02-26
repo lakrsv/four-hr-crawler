@@ -16,11 +16,11 @@ public class DynamoCrawlStateRepository implements CrawlStateRepository {
     private final DynamoDbTemplate dynamoDbTemplate;
     private final CrawlPersistenceProperties crawlStateProperties;
 
-    public boolean tryStartCrawl(CrawlRequestContext context){
+    public boolean tryStartCrawl(CrawlRequestContext context) {
         var currentState = dynamoDbTemplate.load(Key.builder().partitionValue(context.crawlId()).build(), CrawlState.class);
         // TODO: Allow resuming requests that have errored out
         // TODO: Why doesn't save throw (USE KEY CONSTRAINT INSTEAD)
-        if(currentState != null) {
+        if (currentState != null) {
             return false;
         }
         var currentTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
@@ -33,7 +33,7 @@ public class DynamoCrawlStateRepository implements CrawlStateRepository {
     @Override
     public boolean finishCrawl(CrawlRequestContext context, boolean error) {
         var currentState = dynamoDbTemplate.load(Key.builder().partitionValue(context.crawlId()).build(), CrawlState.class);
-        if(currentState == null){
+        if (currentState == null) {
             return false;
         }
         currentState.setFinishedTime(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
@@ -45,7 +45,7 @@ public class DynamoCrawlStateRepository implements CrawlStateRepository {
     @Override
     public Optional<CrawlStatus> getCrawlStatus(String crawlId) {
         var currentState = dynamoDbTemplate.load(Key.builder().partitionValue(crawlId).build(), CrawlState.class);
-        if(currentState == null){
+        if (currentState == null) {
             return Optional.empty();
         }
         return Optional.of(currentState.getStatus());
