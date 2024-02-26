@@ -10,7 +10,7 @@ public interface ResultHandler {
 
     void onCrawlStarting(CrawlRequestContext context);
 
-    // TODO: Fix leaky abstraction
+    // TODO: Fix leaky abstraction?
     void onCrawlProgress(CrawlRequestContext context, URI target, Document document);
 
     void onCrawlFinished(CrawlRequestContext context, CrawlException e);
