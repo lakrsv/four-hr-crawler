@@ -1,6 +1,7 @@
 package com.github.lakrsv.crawler.core.scraper;
 
 import com.github.lakrsv.crawler.core.exception.CrawlException;
+import com.github.lakrsv.crawler.core.http.JsoupHttpBodyRetriever;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -38,7 +39,7 @@ public class CrawlScraperIT {
             "https://forum.webscraper.io/",
             "https://webscraper.io/blog"
     );
-    private final CrawlScraper crawlScraper = new CrawlScraper();
+    private final CrawlScraper crawlScraper = new CrawlScraper(new JsoupHttpBodyRetriever());
 
     @Test
     public void scrapeWithKnownTestSiteReturnsExpectedLinks() {

@@ -3,6 +3,7 @@ package com.github.lakrsv.crawler.core;
 import com.github.lakrsv.crawler.core.dto.CrawlRequest;
 import com.github.lakrsv.crawler.core.dto.CrawlRequestConfiguration;
 import com.github.lakrsv.crawler.core.dto.CrawlRequestContext;
+import com.github.lakrsv.crawler.core.http.JsoupHttpBodyRetriever;
 import com.github.lakrsv.crawler.core.result.LogResultHandler;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
 import org.junit.jupiter.api.Disabled;
@@ -16,7 +17,7 @@ public class FourHrCrawlerTest {
     @Test
     @Disabled
     public void crawlSimpleTest() throws InterruptedException {
-        var scraper = new FourHrCrawler(Executors.newVirtualThreadPerTaskExecutor(), new CrawlScraper());
+        var scraper = new FourHrCrawler(Executors.newVirtualThreadPerTaskExecutor(), new CrawlScraper(new JsoupHttpBodyRetriever()));
         var request = new CrawlRequest(URI.create("http://www.monzo.com"));
         var context = new CrawlRequestContext("crawlId", request, CrawlRequestConfiguration.builder()
                 .allowedDomains(Set.of(request.target().getHost()))
