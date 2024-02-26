@@ -1,5 +1,7 @@
 package com.github.lakrsv.crawler.app.handler;
 
+import com.github.lakrsv.crawler.app.domain.request.SubmitCrawlRequest;
+import com.github.lakrsv.crawler.app.domain.response.SubmitCrawlResponse;
 import com.github.lakrsv.crawler.app.service.CrawlerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,13 +20,11 @@ public class CrawlHandler {
     private final CrawlerService crawlerService;
 
     public Mono<ServerResponse> submitCrawl(ServerRequest request) {
-        var url = request.queryParam("url").orElse(null);
-        if (url == null) {
-            return ServerResponse.badRequest().build();
-        }
-        var response = crawlerService.submitCrawl(url);
-        return ServerResponse.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(response));
+        return request.bodyToMono(SubmitCrawlRequest.class)
+                .map(req -> crawlerService.submitCrawl(req.url()))
+                .flatMap(response -> ServerResponse.accepted()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromValue(response)));
     }
 
     public Mono<ServerResponse> getCrawlStatus(ServerRequest request) {

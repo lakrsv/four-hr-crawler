@@ -4,6 +4,9 @@ import com.github.lakrsv.crawler.core.dto.CrawlRequest;
 import org.apache.commons.codec.digest.MurmurHash3;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import static java.lang.String.valueOf;
 
 public class CrawlIdCreator {
     public String createCrawlId(CrawlRequest crawlRequest) {
@@ -12,6 +15,8 @@ public class CrawlIdCreator {
         var uri = crawlRequest.target().toString();
         hash.add(uri.getBytes(StandardCharsets.UTF_8), 0, uri.length());
 
-        return String.valueOf(hash.end());
+        return Base64.getEncoder()
+                .encodeToString(valueOf(hash.end())
+                        .getBytes(StandardCharsets.UTF_8));
     }
 }

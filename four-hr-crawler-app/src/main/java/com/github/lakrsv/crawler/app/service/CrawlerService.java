@@ -13,8 +13,10 @@ import com.github.lakrsv.crawler.core.result.ResultHandler;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -34,6 +36,7 @@ public class CrawlerService {
         if (crawlStateRepository.tryStartCrawl(requestContext)) {
             crawler.startCrawl(requestContext, new CrawlResultHandler(resultHandler, crawlStateRepository));
         }
+
         return new SubmitCrawlResponse(requestContext.crawlId());
     }
 

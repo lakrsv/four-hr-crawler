@@ -11,16 +11,19 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
+import static java.lang.String.join;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 
 @Configuration(proxyBeanMethods = false)
 public class CrawlRouter {
 
-    private static final String API_BASE_PATH = "/crawl/";
-    private static final String API_VERSION = "v1";
-    private static final String SUBMIT_CRAWL_RESOURCE_PATH = "/submit";
-    private static final String GET_CRAWL_STATUS_RESOURCE_PATH = "/{crawlId}/status";
+    private static final String API_PATH_DELIMITER = "/";
+    private static final String API_BASE_PATH = "crawl";
+    private static final String GET_CRAWL_STATUS_RESOURCE_PATH = "{crawlId}/status";
     // TODO: Implement pagination of results: https://www.baeldung.com/spring-data-webflux-pagination
     private static final String GET_CRAWL_RESULT_RESOURCE_PATH = "/{crawlId}/....";
 
@@ -29,18 +32,18 @@ public class CrawlRouter {
         return RouterFunctions
                 .route()
                 .POST(
-                        constructRoute(SUBMIT_CRAWL_RESOURCE_PATH),
-                        RequestPredicates.queryParam("url", this::validateUrl),
+                        constructRoute(API_BASE_PATH),
+                        accept(MediaType.APPLICATION_JSON),
                         crawlHandler::submitCrawl)
                 .GET(
-                        constructRoute(GET_CRAWL_STATUS_RESOURCE_PATH),
+                        constructRoute(API_BASE_PATH, GET_CRAWL_STATUS_RESOURCE_PATH),
                         accept(MediaType.APPLICATION_JSON),
                         crawlHandler::getCrawlStatus)
                 .build();
     }
 
-    private String constructRoute(String resourcePath) {
-        return API_BASE_PATH + API_VERSION + resourcePath;
+    private String constructRoute(String... resourcePath) {
+        return API_PATH_DELIMITER + join("/", resourcePath);
     }
 
     // TODO: This simply returns 404 - NOT FOUND when URL is invalid. How to implement proper validation with RouterFunction?
