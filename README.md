@@ -1,7 +1,10 @@
 # Four Hr Crawler
 
-This is a webcrawler made in approximately 4 hours, excluding setting up the java boilerplate and creating the
-diagrams (30 minutes).
+This web crawler was made as a challenge, with the intent to finish it in 4 hours. For the 4 hour version of this crawler, use the [4_hour_mark](https://github.com/lakrsv/four-hr-crawler/tree/4_hour_mark) tag. This repository contains two parts:
+* Application (four-hr-crawler-app)
+* Core Library (four-hr-crawler-core)
+
+The application exposes an API allowing the submission of web crawls, which then populates a Graph Database (neo4j) for visualization of the results.
 
 ## Running Locally
 
