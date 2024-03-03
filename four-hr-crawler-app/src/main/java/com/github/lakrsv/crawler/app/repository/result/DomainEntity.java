@@ -1,12 +1,9 @@
 package com.github.lakrsv.crawler.app.repository.result;
 
-import com.google.common.net.InternetDomainName;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.HashSet;
@@ -34,7 +31,7 @@ public class DomainEntity {
 //        incomingLinks.addAll(incoming);
 //    }
 
-    public void addOutgoingLinks(Set<DomainEntity> outgoing){
+    public void addOutgoingLinks(Set<DomainEntity> outgoing) {
         outgoingLinks.addAll(outgoing);
     }
 }

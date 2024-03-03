@@ -81,7 +81,7 @@ public class CrawlerService {
 
             // TODO: Save all external domains with incoming/outgoing. Right now just doing current
             var websiteEntity = domainRepository.findOneByName(UriUtil.getDomainName(target.getHost())).block();
-            if(websiteEntity == null) {
+            if (websiteEntity == null) {
                 var domainName = UriUtil.getDomainName(target.getHost());
                 websiteEntity = new DomainEntity(domainName, InternetDomainName.from(domainName).topPrivateDomain().toString());
             }

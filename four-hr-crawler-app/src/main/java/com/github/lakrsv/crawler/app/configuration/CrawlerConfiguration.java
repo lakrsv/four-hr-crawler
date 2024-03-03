@@ -3,18 +3,13 @@ package com.github.lakrsv.crawler.app.configuration;
 import com.github.lakrsv.crawler.app.http.WebClientHttpBodyRetriever;
 import com.github.lakrsv.crawler.core.FourHrCrawler;
 import com.github.lakrsv.crawler.core.http.HttpBodyRetriever;
-import com.github.lakrsv.crawler.core.http.JsoupHttpBodyRetriever;
 import com.github.lakrsv.crawler.core.scraper.CrawlScraper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.JdkClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorNetty2ClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.resources.ConnectionProvider;
 
 import java.net.http.HttpClient;
-import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,7 +21,7 @@ public class CrawlerConfiguration {
     }
 
     @Bean
-    public WebClient webClient(){
+    public WebClient webClient() {
         return WebClient.builder()
                 .clientConnector(new JdkClientHttpConnector(HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()))
 // TODO: Tweak the knobs to get reactor client to work well
@@ -41,15 +36,16 @@ public class CrawlerConfiguration {
 //                        .followRedirect(true)))
                 .build();
     }
-//    @Bean
-//    public HttpBodyRetriever httpBodyRetriever(WebClient webClient) {
-//        return new WebClientHttpBodyRetriever(webClient);
-//    }
 
     @Bean
-    public HttpBodyRetriever httpBodyRetriever(){
-        return new JsoupHttpBodyRetriever();
+    public HttpBodyRetriever httpBodyRetriever(WebClient webClient) {
+        return new WebClientHttpBodyRetriever(webClient);
     }
+
+//    @Bean
+//    public HttpBodyRetriever httpBodyRetriever(){
+//        return new JsoupHttpBodyRetriever();
+//    }
 
     @Bean
     public CrawlScraper crawlScraper(HttpBodyRetriever httpBodyRetriever) {

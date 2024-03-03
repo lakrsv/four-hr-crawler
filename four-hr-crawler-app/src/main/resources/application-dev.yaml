@@ -4,9 +4,6 @@ spring:
     authentication:
       username: neo4j
       password: neo4jsecret
-  #data:
-    #neo4j:
-      #database: my-database
   cloud:
     aws:
       endpoint: http://localhost:4566
