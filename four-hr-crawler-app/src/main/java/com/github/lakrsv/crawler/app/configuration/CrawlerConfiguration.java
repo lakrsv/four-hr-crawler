@@ -41,9 +41,14 @@ public class CrawlerConfiguration {
 //                        .followRedirect(true)))
                 .build();
     }
+//    @Bean
+//    public HttpBodyRetriever httpBodyRetriever(WebClient webClient) {
+//        return new WebClientHttpBodyRetriever(webClient);
+//    }
+
     @Bean
-    public HttpBodyRetriever httpBodyRetriever(WebClient webClient) {
-        return new WebClientHttpBodyRetriever(webClient);
+    public HttpBodyRetriever httpBodyRetriever(){
+        return new JsoupHttpBodyRetriever();
     }
 
     @Bean

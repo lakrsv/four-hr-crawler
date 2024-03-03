@@ -12,3 +12,11 @@ services:
       - ./localstack-setup.sh:/etc/localstack/init/ready.d/script.sh
     labels:
       org.springframework.boot.ignore: true
+  neo4j:
+    image: neo4j:5.17-community
+    container_name: neo4j
+    ports:
+      - "127.0.0.1:7474:7474" # HTTP
+      - "127.0.0.1:7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/neo4jsecret

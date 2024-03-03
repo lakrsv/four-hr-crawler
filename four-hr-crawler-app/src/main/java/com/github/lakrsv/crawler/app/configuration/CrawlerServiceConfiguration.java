@@ -17,10 +17,10 @@ public class CrawlerServiceConfiguration {
         return new CrawlIdCreator();
     }
 
-    @Bean
-    public ResultHandler resultHandler() {
-        return new LoggingResultHandler();
-    }
+//    @Bean
+//    public ResultHandler resultHandler() {
+//        return new LoggingResultHandler();
+//    }
 
     @Bean
     public CrawlStateRepository crawlStateRepository(DynamoDbTemplate dynamoDbTemplate, CrawlPersistenceProperties crawlPersistenceProperties) {
