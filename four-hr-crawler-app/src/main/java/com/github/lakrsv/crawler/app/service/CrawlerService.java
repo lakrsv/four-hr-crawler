@@ -79,7 +79,6 @@ public class CrawlerService {
                     .map(domain -> new DomainEntity(domain, InternetDomainName.from(domain).topPrivateDomain().toString()))
                     .collect(Collectors.toSet());
 
-            // TODO: Save all external domains with incoming/outgoing. Right now just doing current
             var websiteEntity = domainRepository.findOneByName(UriUtil.getDomainName(target.getHost())).block();
             if (websiteEntity == null) {
                 var domainName = UriUtil.getDomainName(target.getHost());

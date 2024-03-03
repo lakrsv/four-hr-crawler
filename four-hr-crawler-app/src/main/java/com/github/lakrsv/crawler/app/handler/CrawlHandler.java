@@ -34,13 +34,4 @@ public class CrawlHandler {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(response));
     }
-
-    // TODO: Paginate crawl results.. see router todo
-//    public Mono<ServerResponse> getCrawlResult(ServerRequest request) {
-//        var crawlId = request.pathVariable("crawlId");
-//
-//        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-//                .body(BodyInserters.fromPublisher(Flux.fromIterable(List.of("hello", "world")), String.class));
-//
-//    }
 }

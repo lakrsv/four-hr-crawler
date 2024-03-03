@@ -20,8 +20,8 @@ public class CrawlRouter {
     private static final String API_PATH_DELIMITER = "/";
     private static final String API_BASE_PATH = "crawl";
     private static final String GET_CRAWL_STATUS_RESOURCE_PATH = "{crawlId}/status";
-    // TODO: Implement pagination of results: https://www.baeldung.com/spring-data-webflux-pagination
-    private static final String GET_CRAWL_RESULT_RESOURCE_PATH = "/{crawlId}/....";
+    // TODO: Implement pagination of results?: https://www.baeldung.com/spring-data-webflux-pagination
+    //private static final String GET_CRAWL_RESULT_RESOURCE_PATH = "/{crawlId}/....";
 
     @Bean
     public RouterFunction<ServerResponse> route(CrawlHandler crawlHandler) {
@@ -40,16 +40,5 @@ public class CrawlRouter {
 
     private String constructRoute(String... resourcePath) {
         return API_PATH_DELIMITER + join("/", resourcePath);
-    }
-
-    // TODO: This simply returns 404 - NOT FOUND when URL is invalid. How to implement proper validation with RouterFunction?
-    // TODO: Is using @Controller better?
-    private boolean validateUrl(String url) {
-        try {
-            var uri = new URI(url);
-            return "http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme());
-        } catch (URISyntaxException e) {
-            return false;
-        }
     }
 }
