@@ -34,12 +34,11 @@ public class CrawlerService {
     private final DomainRepository domainRepository;
     private final Optional<ResultHandler> resultHandler;
 
-    public SubmitCrawlResponse submitCrawl(String url) {
+    public SubmitCrawlResponse submitCrawl(String url, Set<String> allowedDomains) {
         // TODO: URI validation here?
         var request = new CrawlRequest(URI.create(url));
         var requestContext = new CrawlRequestContext(crawlIdCreator.createCrawlId(request), request, CrawlRequestConfiguration.builder()
-                //.allowedDomains(Set.of(request.target().getHost()))
-                .allowedDomains(Set.of(".*")) // No limits
+                .allowedDomains(allowedDomains.isEmpty() ? Set.of(request.target().getHost()) : allowedDomains)
                 .build());
         if (crawlStateRepository.tryStartCrawl(requestContext)) {
             crawler.startCrawl(requestContext, new CrawlResultHandler(resultHandler, crawlStateRepository, domainRepository));

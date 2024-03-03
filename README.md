@@ -18,7 +18,11 @@ you can execute requests using `curl`
 
 `Submit Crawl`
 ```
-curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"url\": \"http://monzo.com\"}" http://localhost:8080/crawl
+curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"url\": \"https://rapid7.com\", \"allowedDomains\": []}" http://localhost:8080/crawl
+```
+By default, the crawl will be limited to the provided domain. Additional domains may be passed through the `allowedDomains` parameter, as regex expressions. For example, to allow **all domains**, pass `.*` as the domain filter.
+```
+curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"url\": \"https://rapid7.com\", \"allowedDomains\": [\".*\"]}" http://localhost:8080/crawl
 ```
 
 `Poll Crawl Status`
@@ -26,5 +30,7 @@ curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST -
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/crawl/LTE4NDAwMDAwNDg=/status
 ```
 
-For now, this will only result in log output in the console.
+## Visualising Results
+During the crawl, the application publishes the results to `Neo4j` which is running in a docker container. The results may be visualised by opening the [visualize.html](./visualize.html) file.
+![Crawl Visualization with allow all filter](./Four%20Hour%20Crawler%20-%20Visualised%20Result.png)
 

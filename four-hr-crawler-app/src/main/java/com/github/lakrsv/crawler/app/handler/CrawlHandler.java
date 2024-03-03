@@ -17,7 +17,7 @@ public class CrawlHandler {
 
     public Mono<ServerResponse> submitCrawl(ServerRequest request) {
         return request.bodyToMono(SubmitCrawlRequest.class)
-                .map(req -> crawlerService.submitCrawl(req.url()))
+                .map(req -> crawlerService.submitCrawl(req.url(), req.allowedDomains()))
                 .flatMap(response -> ServerResponse.accepted()
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(BodyInserters.fromValue(response)));

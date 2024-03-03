@@ -1,4 +1,6 @@
 package com.github.lakrsv.crawler.app.domain.request;
 
-public record SubmitCrawlRequest(String url) {
+import java.util.Set;
+
+public record SubmitCrawlRequest(String url, Set<String> allowedDomains) {
 }
