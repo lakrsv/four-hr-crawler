@@ -87,7 +87,6 @@ public class CrawlerService {
             }
             websiteEntity.addOutgoingLinks(linkedExternalDomains);
             domainRepository.save(websiteEntity).block();
-            var s = "s";
         }
 
         @Override
