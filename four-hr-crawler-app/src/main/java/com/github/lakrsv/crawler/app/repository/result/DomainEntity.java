@@ -19,17 +19,11 @@ public class DomainEntity {
     private final String topPrivateDomain;
     @Relationship(type = "LINKS_TO", direction = Relationship.Direction.OUTGOING)
     private Set<DomainEntity> outgoingLinks = new HashSet<>();
-//    @Relationship(type = "LINKS_FROM", direction = Relationship.Direction.INCOMING)
-//    private Set<WebsiteEntity> incomingLinks = new HashSet<>();
 
     public DomainEntity(String name, String topPrivateDomain) {
         this.name = name;
         this.topPrivateDomain = topPrivateDomain;
     }
-
-//    public void addIncomingLinks(Set<WebsiteEntity> incoming) {
-//        incomingLinks.addAll(incoming);
-//    }
 
     public void addOutgoingLinks(Set<DomainEntity> outgoing) {
         outgoingLinks.addAll(outgoing);
